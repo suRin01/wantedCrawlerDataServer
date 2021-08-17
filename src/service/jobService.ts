@@ -9,10 +9,10 @@ interface excutionResult {
 
 interface rowData{
 	idx: number;
-	page_id: string;
-	company_name: number;
-	company_address: string;
-	hiring_position: string;
+	pageId: string;
+	companyName: number;
+	companyAddress: string;
+	hiringPosition: string;
 }
 
 export class userService{
@@ -27,8 +27,8 @@ export class userService{
 	
 	}
 
-	public insertUser = async (page_id: string, company_name: string, company_address: string, hiring_position:string): Promise<excutionResult> =>{	
-		return await this.dbMapper.mapper(queryStrings.insertUser, [page_id, company_name, company_address, hiring_position]);
+	public insertUser = async (pageId: string, companyName: string, companyAddress: string, hiringPosition:string): Promise<excutionResult> =>{	
+		return await this.dbMapper.mapper(queryStrings.insertUser, [pageId, companyName, companyAddress, hiringPosition]);
 	
 	}
 

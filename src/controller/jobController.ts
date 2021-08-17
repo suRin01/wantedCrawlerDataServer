@@ -1,25 +1,24 @@
 import express, {Request, Response} from "express";
+import {userService} from "../service/jobService";
 const router = express.Router();
-
-import {userService} from "../service/userService";
 const service = new userService();
 
-router.get("/getjob", async (req: Request, res: Response) => {
+router.get("/job", async (req: Request, res: Response) => {
 	const result = await service.getUserList();
 
 	console.log(result);
 	res.json(result);
 });
 
-router.post("/postjob", async (req: Request, res: Response) => {
+router.post("/job", async (req: Request, res: Response) => {
 	const body = req.body;
 
-	const company_name = body.company_name;
-	const page_id = body.page_id;
-	const company_address = body.company_address;
-	const hiring_position = body.hiring_position;
+	const pageId = body.page_id;
+	const companyName = body.company_name;
+	const companyAddress = body.company_address;
+	const hiringPosition = body.hiring_position;
 
-	const result = await service.insertUser(page_id, company_name, company_address, hiring_position);
+	const result = await service.insertUser(pageId, companyName, companyAddress, hiringPosition);
 
 	console.log(await service.getUserList());
 	res.json(result);

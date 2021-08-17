@@ -1,6 +1,6 @@
 import express from "express";
 import "dotenv/config";
-import userController from "./controller/userController";
+import userController from "./controller/jobController";
 
 
 export class server{

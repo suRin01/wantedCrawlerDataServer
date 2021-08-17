@@ -1,10 +1,10 @@
 import {database} from "../util/database";
 interface rowData{
 	idx: number;
-	page_id: string;
-	company_name: number;
-	company_address: string;
-	hiring_position: string;
+	pageId: string;
+	companyName: number;
+	companyAddress: string;
+	hiringPosition: string;
 }
 
 interface excutionResult {
@@ -52,7 +52,7 @@ export class mapper{
 			if(result !== undefined){
 				for(let idx = 0, len = (result[0] as any[]).length; idx< len; idx++){
 					const tempResult = (result[0] as any[])[idx];
-					resultArr.push({idx:tempResult.idx , page_id:tempResult.page_id, company_name:tempResult.company_name, company_address:tempResult.company_address, hiring_position: tempResult.hiring_position});
+					resultArr.push({idx:tempResult.idx , pageId:tempResult.page_id, companyName:tempResult.company_name, companyAddress:tempResult.company_address, hiringPosition: tempResult.hiring_position});
 				}
 	
 			}
