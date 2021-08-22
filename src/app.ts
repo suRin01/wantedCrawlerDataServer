@@ -1,6 +1,6 @@
 import express from "express";
 import "dotenv/config";
-import userController from "./controller/jobController";
+import {router} from "./routes/jobRouter";
 
 
 export class server{
@@ -10,9 +10,9 @@ export class server{
 	public start = (): void =>{
 		this.app.use(express.json());
 		this.app.use(express.urlencoded());
-		this.app.use("/", userController);
+		this.app.use("/", router);
 		this.app.listen(this.port, ()=>{
-			console.log("start");
+			console.log(`Start Server on localhost:${this.port}`);
 		});
 		
 	}

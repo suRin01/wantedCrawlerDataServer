@@ -13,5 +13,12 @@
     "alwaysStrict": true,
     "removeComments": true,
     "strictNullChecks": true,
-   }
+   },
+   "include":[
+    "D:/Programming/TS/wantedCrawlerDataServer/src/**/*"
+   ],
+   "exclude": [
+    "D:/Programming/TS/wantedCrawlerDataServer/node_modules",
+    "D:/Programming/TS/wantedCrawlerDataServer/**/*.spec.ts"
+   ]
 }

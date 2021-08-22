@@ -1,52 +1,43 @@
-import express, {Request, Response} from "express";
-import {userService} from "../service/jobService";
-const router = express.Router();
-const service = new userService();
+import {Request, Response} from "express";
+import {jobService} from "../service/jobService";
+interface excutionResult {
+    status: number;
+    data: Array<rowData>;
+}
 
-router.get("/job", async (req: Request, res: Response) => {
-	const result = await service.getUserList();
+interface rowData{
+	idx: number;
+	pageId: string;
+	companyName: number;
+	companyAddress: string;
+	hiringPosition: string;
+}
 
-	console.log(result);
-	res.json(result);
-});
+export class JobController{
+	private service: jobService;
+	constructor(){
+		console.log("job Router created");
+		this.service = new jobService();
+	}
 
-router.post("/job", async (req: Request, res: Response) => {
-	const body = req.body;
+	public async getJobList():Promise<excutionResult> {
+		console.log("get job list");
+		const result = await this.service.getJobList();
 
-	const pageId = body.page_id;
-	const companyName = body.company_name;
-	const companyAddress = body.company_address;
-	const hiringPosition = body.hiring_position;
+		console.log(result);
+		return result;
+	}
 
-	const result = await service.insertUser(pageId, companyName, companyAddress, hiringPosition);
+	public async postJob(request: Request): Promise<excutionResult>{
+		const body = request.body;
 
-	console.log(await service.getUserList());
-	res.json(result);
-});
+		const pageId = body.page_id;
+		const companyName = body.company_name;
+		const companyAddress = body.company_address;
+		const hiringPosition = body.hiring_position;
 
-// router.delete("/deletejob", async (req: Request, res: Response) => {
-// 	const id = req.body.id;
+		const result = await this.service.insertJob(pageId, companyName, companyAddress, hiringPosition);
 
-// 	const result = await service.deleteUser(id);
-
-// 	console.log(service.getUserList());
-// 	res.json(result);
-// });
-
-// router.put("/patchjob", body("age").isNumeric(), async (req: Request, res: Response) => {
-// 	const errors = validationResult(req);
-// 	if (!errors.isEmpty()) {
-// 		return res.status(400).json({ errors: errors.array() });
-// 	}
-// 	const body = req.body;
-
-// 	const id = body.id;
-// 	const age = body.age;
-
-// 	console.log(service.getUserList());
-// 	const result = await service.patchUser(id, age);
-// 	res.json(result);
-// });
-
-export = router;
-
+		return result;
+	}
+}
