@@ -1,4 +1,6 @@
+import mysql from "mysql2/promise";
 import {database} from "../util/database";
+import { logger } from "../util/winston";
 interface rowData{
 	idx: number;
 	pageId: string;
@@ -7,7 +9,7 @@ interface rowData{
 	hiringPosition: string;
 }
 
-interface excutionResult {
+interface executionResult {
     status: number;
     data: Array<rowData>;
 }
@@ -19,23 +21,25 @@ export class mapper{
 	private db:database;
 	constructor(){
 		this.db = new database();
+		logger.info("Database connection created");
 
 	}
-	public mapper = async (query: string, data:string[] = []): Promise<excutionResult> =>{
+	public mapper = async (query: string, data:string[] = []): Promise<executionResult> =>{
 		//Get database Connection
-		const conn = await this.db.getConnection();
+		const conn:mysql.PoolConnection|undefined = await this.db.getConnection();
 		if(conn === undefined){
-			console.log("database connection failed.");
+			logger.error("database connection failed.");
 			return {status: 500, data: []};
 		}
 	
 		//Excute query
-		const result = await conn.query(
+		const result:void | [mysql.RowDataPacket[] | mysql.RowDataPacket[][] | mysql.OkPacket | mysql.OkPacket[] | mysql.ResultSetHeader, mysql.FieldPacket[]] = await conn.query(
 			query,
 			data
 		)
 			.catch((err: Error)=>{
-				console.log(err);
+				logger.error("Query execution failed");
+				logger.error(err);
 			});
 	
 		//Relase connection and return 
@@ -56,14 +60,16 @@ export class mapper{
 				}
 	
 			}
-	
+			logger.info("Query execution success");
 			return {status: 200, data: resultArr};
 		}
 		else if(result !== undefined){
-			return {status: 200, data: resultArr};
+			logger.info("Query execution success with no returning data");
+			return {status: 200, data: []};
 		}
 		else{
-			return {status: 500, data: resultArr};
+			logger.error("Query execution failed");
+			return {status: 500, data: []};
 		}
 	}
 }

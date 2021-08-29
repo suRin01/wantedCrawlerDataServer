@@ -1,52 +1,64 @@
-import express, {Request, Response} from "express";
-import {userService} from "../service/jobService";
-const router = express.Router();
-const service = new userService();
+import { Request, Response } from "express";
+import { jobService } from "../service/jobService";
+import { Result, ValidationError, validationResult } from "express-validator";
+import { logger } from "../util/winston";
 
-router.get("/job", async (req: Request, res: Response) => {
-	const result = await service.getUserList();
+interface executionResult {
+    status: number;
+    data: Array<rowData>;
+}
 
-	console.log(result);
-	res.json(result);
-});
+interface rowData{
+	idx: number;
+	pageId: string;
+	companyName: number;
+	companyAddress: string;
+	hiringPosition: string;
+}
 
-router.post("/job", async (req: Request, res: Response) => {
-	const body = req.body;
+export class JobController{
+	private service: jobService;
+	constructor(){
+		this.service = new jobService();
+	}
 
-	const pageId = body.page_id;
-	const companyName = body.company_name;
-	const companyAddress = body.company_address;
-	const hiringPosition = body.hiring_position;
+	public async getJobList(request: Request, resposne: Response):Promise<executionResult> {
+		logger.info("GET /job");
+		const result:executionResult = await this.service.getJobList();
+		resposne.json(result);
 
-	const result = await service.insertUser(pageId, companyName, companyAddress, hiringPosition);
+		logger.info("Get Job list");
 
-	console.log(await service.getUserList());
-	res.json(result);
-});
+		return result;
+	}
 
-// router.delete("/deletejob", async (req: Request, res: Response) => {
-// 	const id = req.body.id;
+	public async postJob(request: Request, resposne: Response): Promise<executionResult>{
+		logger.info("POST /job");
+		const errors: Result<ValidationError> = validationResult(request);
+		if (!errors.isEmpty()) {
+			resposne.status(400).json({ errors: errors.array() });
+			logger.error("Validation error on posting job list");
 
-// 	const result = await service.deleteUser(id);
+			return {
+				status: 500,
+				data: []
+			};
+		}
 
-// 	console.log(service.getUserList());
-// 	res.json(result);
-// });
+		const body:any = request.body;
 
-// router.put("/patchjob", body("age").isNumeric(), async (req: Request, res: Response) => {
-// 	const errors = validationResult(req);
-// 	if (!errors.isEmpty()) {
-// 		return res.status(400).json({ errors: errors.array() });
-// 	}
-// 	const body = req.body;
+		const pageId:string = body.page_id;
+		const companyName:string = body.company_name;
+		const companyAddress:string = body.company_address;
+		const hiringPosition:string = body.hiring_position;
+		console.log(pageId, companyName, companyAddress, hiringPosition);
 
-// 	const id = body.id;
-// 	const age = body.age;
+		const result = await this.service.insertJob(pageId, companyName, companyAddress, hiringPosition);
+		
+		resposne.json(result);
 
-// 	console.log(service.getUserList());
-// 	const result = await service.patchUser(id, age);
-// 	res.json(result);
-// });
+		logger.info("Job Posted");
 
-export = router;
-
+		return result;
+	}
+}

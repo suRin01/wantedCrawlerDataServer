@@ -1,18 +1,24 @@
 import express from "express";
 import "dotenv/config";
-import userController from "./controller/jobController";
+import {jobRouter} from "./routes/jobRouter";
+import {commandRouter} from "./routes/commandRouter";
+import {logger} from "./util/winston";
 
 
 export class server{
-	private port = process.env.PORT;
-	private app = express();
+	private port: string|undefined = process.env.PORT;
+	private app: express.Express = express();
 	
 	public start = (): void =>{
 		this.app.use(express.json());
 		this.app.use(express.urlencoded());
-		this.app.use("/", userController);
+		this.app.use("/", jobRouter);
+		this.app.use("/", commandRouter);
+
+
 		this.app.listen(this.port, ()=>{
-			console.log("start");
+			logger.info(`Start Server on localhost:${this.port}`);
+			console.log(`Start Server on localhost:${this.port}`);
 		});
 		
 	}
@@ -20,5 +26,5 @@ export class server{
 }
 
 
-const instance = new server;
+const instance:server = new server;
 instance.start();
