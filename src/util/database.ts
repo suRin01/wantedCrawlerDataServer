@@ -1,5 +1,6 @@
 
 import mysql from "mysql2/promise";
+import { logger } from "../util/winston";
 import "dotenv/config";
 
 
@@ -14,13 +15,15 @@ export class database{
 			database: process.env.DB_DATABASE,
 			connectionLimit: 5
 		});
+		logger.info("Mysql connection pool created.");
 	}
 	
     
 	public getConnection = async ():Promise<mysql.PoolConnection | undefined> => {
 		return await this.pool.getConnection()
 			.catch((err: Error)=>{
-				console.log(err);
+				logger.error("Mysql connection pool creation failed.");
+				logger.error(err);
 				return undefined;
 			});
 	}

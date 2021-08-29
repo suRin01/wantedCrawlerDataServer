@@ -5,3 +5,7 @@ export class queryStrings{
     // public static readonly patchUser:string = "UPDATE `Develop`.`wantedJobData` SET `age` = ? WHERE (`id` = ?);";
 
 }
+
+export class config{
+    public static readonly logFileLocation:string = "D:/Programming/TS/wantedCrawlerDataServer/log";
+}

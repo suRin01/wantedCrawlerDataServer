@@ -1,7 +1,7 @@
 import {mapper} from "../mapper/mapper";
 import {queryStrings} from "../common/constants";
 
-interface excutionResult {
+interface executionResult {
     status: number;
     data: Array<rowData>;
 }
@@ -22,12 +22,12 @@ export class jobService{
 
 	}
 
-	public getJobList = async (): Promise<excutionResult> =>{
+	public getJobList = async (): Promise<executionResult> =>{
 		return await this.dbMapper.mapper(queryStrings.getJobList);
 	
 	}
 
-	public insertJob = async (pageId: string, companyName: string, companyAddress: string, hiringPosition:string): Promise<excutionResult> =>{	
+	public insertJob = async (pageId: string, companyName: string, companyAddress: string, hiringPosition:string): Promise<executionResult> =>{	
 		return await this.dbMapper.mapper(queryStrings.insertJob, [pageId, companyName, companyAddress, hiringPosition]);
 	
 	}
