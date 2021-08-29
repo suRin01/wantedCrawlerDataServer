@@ -8,6 +8,7 @@
     "outDir":"dist/",
     "rootDir":"src/",
     "strict": true,
+    "sourceMap": true,
     "moduleResolution":"node",
     "esModuleInterop":true,
     "alwaysStrict": true,
